@@ -8,6 +8,8 @@ from django.dispatch import receiver
 from django.http import JsonResponse
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import ArrayField
+
 
 
 class UserRegistration(models.Model):
@@ -18,9 +20,9 @@ class UserRegistration(models.Model):
 
 
 DOCTOR_TYPE = [
-    ('general_physian', 'General Physician'),
-    ('orthopatic', 'Orthopatic'),
-    ('Sergion', 'Sergion'),
+    ('general_physicipyton an', 'General Physician'),
+    ('Specialist', 'Specialist'),
+    ('Surgeon', 'Surgeon'),
     # Add more choices as needed
 ]
 class Doctor(models.Model):
@@ -29,9 +31,12 @@ class Doctor(models.Model):
     email = models.EmailField(unique=True)
     description = models.TextField()
     experience = models.IntegerField()
-    choice_field = models.CharField(max_length=20, choices=DOCTOR_TYPE, default='general_physian')
+    choice_field = models.CharField(max_length=20, choices=DOCTOR_TYPE, default='general_physian'),
+    hospitals = models.CharField(max_length=200, default='Pet Hospital')
+
 
     user_id= models.OneToOneField(User,on_delete=models.CASCADE)
+
 
 
     def __str__(self):

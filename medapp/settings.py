@@ -57,7 +57,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:57246",
+    "http://localhost:60537",
     # Add other allowed origins here
 ]
 
@@ -73,7 +73,7 @@ CORS_ALLOW_HEADERS = [
     "x-requested-with",
 ]
 # For development only. Do not use this in production.
-CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'medapp.urls'
 
