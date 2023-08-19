@@ -25,6 +25,25 @@ DOCTOR_TYPE = [
     ('Surgeon', 'Surgeon'),
     # Add more choices as needed
 ]
+
+class Hospital(models.Model):
+
+    name = models.CharField(max_length=100)
+    location = models.EmailField(unique=True, null=True, blank=True)
+    lat = models.IntegerField(null=True, blank=True)
+    lng = models.IntegerField(null=True, blank=True)
+    city = models.CharField(max_length=100, null=True, blank=True)
+    state = models.CharField(max_length=100, null=True, blank=True)
+    zipcode = models.IntegerField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    phone = models.IntegerField(null=True, blank=True)
+    email = models.EmailField(unique=True, null=True, blank=True)
+    website = models.CharField(max_length=100,null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Doctor(models.Model):
 
     name = models.CharField(max_length=100)
@@ -32,7 +51,7 @@ class Doctor(models.Model):
     description = models.TextField()
     experience = models.IntegerField()
     choice_field = models.CharField(max_length=20, choices=DOCTOR_TYPE, default='general_physian'),
-    hospitals = models.CharField(max_length=200, default='Pet Hospital')
+    hospitals = models.ManyToManyField("Hospital", blank=True)
 
 
     user_id= models.OneToOneField(User,on_delete=models.CASCADE)
@@ -41,4 +60,3 @@ class Doctor(models.Model):
 
     def __str__(self):
         return self.name
-

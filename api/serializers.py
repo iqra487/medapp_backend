@@ -2,8 +2,8 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
-
-
+from rest_framework.relations import PrimaryKeyRelatedField
+from api.models import Hospital
 from api.models import Doctor
 
 
@@ -26,9 +26,18 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return user
 
+class HospitalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Hospital
+        fields = ['id', 'name', 'location', 'lat', 'lng', 'city', 'state', 'zipcode', 'description', 'phone', 'email', 'website']
+
+class HospitalSerializerMini(serializers.ModelSerializer):
+    class Meta:
+        model = Hospital
+        fields = ['id', 'name', 'location']
 
 class DoctorSerializer(serializers.ModelSerializer):
-    # user = UserSerializer()
+    hospitals =  HospitalSerializerMini(many=True, read_only=True)
     class Meta:
         model = Doctor
         fields = ['id', 'name', 'email', 'description', 'experience', 'user_id', 'hospitals']

@@ -47,7 +47,7 @@ class UserProfile(generics.GenericAPIView):
         return Response(user_serializer.data)
 
 class DoctorList(generics.ListCreateAPIView):
-    queryset = Doctor.objects.all()
+    queryset = Doctor.objects.all().prefetch_related('hospitals')
     serializer_class = DoctorSerializer
 
 class DoctorDetail(generics.RetrieveUpdateDestroyAPIView):
