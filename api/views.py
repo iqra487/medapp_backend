@@ -44,8 +44,13 @@ class UserProfile(generics.GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, format=None):
-        user_serializer = UserSerializer(request.user)
-        return Response(user_serializer.data)
+        try:
+            doctor = Doctor.objects.get(user_id=request.user.id)
+            doctor_serializer = DoctorSerializer(doctor)
+            return Response(doctor_serializer.data)
+        except Doctor.DoesNotExist:
+            user_serializer = UserSerializer(request.user)
+            return Response(user_serializer.data)
 
 class DoctorList(generics.ListCreateAPIView):
     queryset = Doctor.objects.all().prefetch_related('hospitals')
