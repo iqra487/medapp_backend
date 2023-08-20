@@ -20,7 +20,7 @@ class UserRegistration(models.Model):
 
 
 DOCTOR_TYPE = [
-    ('general_physicipyton an', 'General Physician'),
+    ('general_physicipyton', 'General Physician'),
     ('Specialist', 'Specialist'),
     ('Surgeon', 'Surgeon'),
     # Add more choices as needed
@@ -50,7 +50,7 @@ class Doctor(models.Model):
     email = models.EmailField(unique=True)
     description = models.TextField()
     experience = models.IntegerField()
-    choice_field = models.CharField(max_length=20, choices=DOCTOR_TYPE, default='general_physian'),
+    type = models.CharField(max_length=20, choices=DOCTOR_TYPE, default='general_physian'),
     hospitals = models.ManyToManyField("Hospital", blank=True)
 
 
@@ -60,3 +60,22 @@ class Doctor(models.Model):
 
     def __str__(self):
         return self.name
+
+APPOINTMENT_TYPE = [
+    ('pending_approval', 'Pending Approval'),
+    ('ongoing', 'On Going'),
+    ('patient_not_arrived', 'Patient Not Arrived'),
+    ('doctor_not_arrived', 'Doctor Not Arrived'),
+    ('both_not_arrived', 'Both Not Arrived'),
+    ('went_well', 'Went Well'),
+]
+
+class Appointment(models.Model):
+    patient = models.ForeignKey(User, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    date = models.DateField()
+    time = models.TimeField()
+    status =  models.CharField(
+        max_length=20, choices=APPOINTMENT_TYPE, default='pending_approval'
+    )
+

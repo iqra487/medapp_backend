@@ -19,7 +19,7 @@ from django.urls import path
 from knox import views as knox_views
 
 
-from api.views import RegisterAPI, LoginAPI, UserProfile, DoctorList, DoctorDetail
+from api.views import AppointmentViewForDoctor, RegisterAPI, LoginAPI, UserProfile, DoctorList, DoctorDetail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +30,6 @@ urlpatterns = [
     path('api/logout/', knox_views.LogoutView.as_view(), name='logout'),
     path('api/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),
     path('api/doctors/', DoctorList.as_view(), name='doctor-list'),
-    path('api/doctors/<int:pk>/', DoctorDetail.as_view(), name='doctor-detail')
-
+    path('api/doctors/<int:pk>/', DoctorDetail.as_view(), name='doctor-detail'),
+    path('api/doctors/appointments/', AppointmentViewForDoctor.as_view(), name='appointment_doctor')
 ]

@@ -4,12 +4,13 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 from knox.models import AuthToken
 
-from .models import Doctor
-from .serializers import UserSerializer, RegisterSerializer, DoctorSerializer
+from .models import Appointment, Doctor
+from .serializers import AppointmentSerializer, UserSerializer, RegisterSerializer, DoctorSerializer
 from knox.views import LoginView as KnoxLoginView
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 from rest_framework.views import APIView
+from rest_framework.exceptions import PermissionDenied
 
 
 
@@ -54,4 +55,27 @@ class DoctorDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Doctor.objects.all()
     serializer_class = DoctorSerializer
 
-
+class AppointmentViewForDoctor(generics.GenericAPIView):
+    serializer_class = AppointmentSerializer
+    def get(self, request, *args, **kwargs):
+        try:
+            print('self.request.user.id',request.user)
+            doctor = Doctor.objects.get(user_id=request.user.id)
+            all_objects =  Appointment.objects.filter(doctor=doctor)
+        except Doctor.DoesNotExist:
+            all_objects =  Appointment.objects.filter(patient=request.user.id)
+        serialize = self.serializer_class(all_objects, many=True)
+        return Response(data=serialize.data, status=200)
+    
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        try:
+            Appointment.objects.create(
+                patient_id=request.user.id,
+                doctor_id=data['doctor_id'],
+                date=data['date'],
+                time=data['time']
+            )
+            return Response(status=201)
+        except Exception as e:
+            raise Exception("Error while creating appointment", e)

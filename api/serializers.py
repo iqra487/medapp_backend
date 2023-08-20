@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework.relations import PrimaryKeyRelatedField
-from api.models import Hospital
+from api.models import Appointment, Hospital
 from api.models import Doctor
 
 
@@ -41,4 +41,17 @@ class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Doctor
         fields = ['id', 'name', 'email', 'description', 'experience', 'user_id', 'hospitals']
+
+class DoctorSerializerMini(serializers.ModelSerializer):
+    class Meta:
+        model = Doctor
+        fields = ['id', 'name', 'email', 'experience']
+
+
+class AppointmentSerializer(serializers.ModelSerializer):
+    doctor =  DoctorSerializerMini(many=False, read_only=True)
+    patient =  UserSerializer(many=False, read_only=True)
+    class Meta:
+        model = Appointment
+        fields = ['patient', 'doctor', 'date', 'time', 'status']
 
